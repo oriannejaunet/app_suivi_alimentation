@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int      @id @default(autoincrement())
+  email         String   @unique
+  passwordHash  String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  heightCm      Float?
+  weightKg      Float?
+  age           Int?
+  gender        String?
+  activityLevel String?
+  goal          String?
+  goalRateKcal  Int      @default(0)
+  onboarded     Boolean  @default(false)
+
+  foodLogs      FoodLog[]
+  customFoods   CustomFood[]
+  weightLogs    WeightLog[]
+}
+
+model FoodLog {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  logDate   String
+  barcode   String?
+  foodName  String
+  quantityG Float
+  calories  Float
+  proteinG  Float?
+  carbsG    Float?
+  fatG      Float?
+  createdAt DateTime @default(now())
+
+  @@index([userId, logDate])
+}
+
+model CustomFood {
+  id              Int      @id @default(autoincrement())
+  userId          Int
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  foodName        String
+  caloriesPer100g Float
+  proteinPer100g  Float?
+  carbsPer100g    Float?
+  fatPer100g      Float?
+  createdAt       DateTime @default(now())
+
+  @@index([userId])
+}
+
+model WeightLog {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  weightKg  Float
+  logDate   String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, logDate])
+  @@index([userId, logDate])
+}
+
+model FoodCache {
+  barcode         String   @id
+  foodName        String
+  brand           String?
+  caloriesPer100g Float?
+  proteinPer100g  Float?
+  carbsPer100g    Float?
+  fatPer100g      Float?
+  imageUrl        String?
+  fetchedAt       DateTime @default(now())
+}
