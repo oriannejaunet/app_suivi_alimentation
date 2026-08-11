@@ -6,7 +6,7 @@ const MACROS = [
 
 export default function MacroBreakdown({ summary }) {
   return (
-    <div className="mt-4 space-y-4 rounded-2xl bg-white p-5 shadow-sm">
+    <div className="mt-4 space-y-4 rounded-2xl bg-white p-5 shadow-soft">
       {MACROS.map((macro) => {
         const consumed = summary[macro.consumedKey] || 0;
         const target = summary[macro.targetKey] || 0;
@@ -21,7 +21,7 @@ export default function MacroBreakdown({ summary }) {
                 {Math.round(consumed)} g <span className="text-gray-400">/ {Math.round(target)} g</span>
               </span>
             </div>
-            <div className="h-2 w-full overflow-hidden rounded-full bg-gray-100">
+            <div className="h-2 w-full overflow-hidden rounded-full bg-pink-50">
               <div
                 className={`h-full rounded-full transition-all ${isOver ? 'bg-amber-500' : macro.color}`}
                 style={{ width: `${progress}%` }}

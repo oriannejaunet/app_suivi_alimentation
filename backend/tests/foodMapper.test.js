@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { mapOffProductToFoodDto } from '../src/services/foodMapper.js';
+import { mapOffProductToFoodDto, matchesSearch } from '../src/services/foodMapper.js';
 
 describe('mapOffProductToFoodDto', () => {
   it("utilise energy-kcal_100g quand disponible", () => {
@@ -35,5 +35,23 @@ describe('mapOffProductToFoodDto', () => {
     const dto = mapOffProductToFoodDto({});
     expect(dto.foodName).toBe('Produit inconnu');
     expect(dto.caloriesPer100g).toBeNull();
+  });
+});
+
+describe('matchesSearch', () => {
+  it('ignore la casse', () => {
+    expect(matchesSearch('Tarte aux pommes', 'POMMES')).toBe(true);
+  });
+
+  it("trouve un nom accentué même si la requête ne l'est pas", () => {
+    expect(matchesSearch('Crème brûlée', 'creme brulee')).toBe(true);
+  });
+
+  it("trouve un nom sans accent même si la requête en a un", () => {
+    expect(matchesSearch('Creme brulee maison', 'crème')).toBe(true);
+  });
+
+  it('ne matche pas une sous-chaîne absente', () => {
+    expect(matchesSearch('Tarte aux pommes', 'poire')).toBe(false);
   });
 });

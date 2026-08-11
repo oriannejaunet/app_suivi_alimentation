@@ -33,13 +33,13 @@ export default function WeightLogForm({ currentWeight, onLogged }) {
             step="0.1"
             value={weightKg}
             onChange={(e) => setWeightKg(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            className="w-full rounded-2xl border border-pink-100 bg-white px-3 py-2 focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200"
           />
         </div>
         <button
           type="submit"
           disabled={submitting}
-          className="rounded-lg bg-brand-600 px-4 py-2 font-medium text-white hover:bg-brand-700 disabled:opacity-50"
+          className="rounded-full bg-gradient-to-r from-brand-500 to-brand-600 px-4 py-2 font-semibold text-white shadow-soft transition hover:from-brand-600 hover:to-brand-700 disabled:opacity-50"
         >
           {submitting ? '…' : 'Enregistrer'}
         </button>

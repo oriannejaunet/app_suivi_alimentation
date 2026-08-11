@@ -1,5 +1,6 @@
 import { prisma } from '../lib/prisma.js';
 import { lookupBarcode, searchByName } from '../services/openFoodFacts.service.js';
+import { matchesSearch } from '../services/foodMapper.js';
 import { HttpError } from '../middleware/errorHandler.js';
 
 function toCustomFoodDto(food) {
@@ -28,16 +29,19 @@ export async function getByBarcode(req, res, next) {
 
 export async function search(req, res, next) {
   try {
-    const query = (req.query.q || '').trim();
+    const query = (req.validatedQuery.q || '').trim();
     if (!query) {
       return res.json([]);
     }
 
-    const customFoods = await prisma.customFood.findMany({
-      where: { userId: req.userId, foodName: { contains: query } },
-      take: 10,
+    // Filtered in JS rather than via Prisma `contains`: SQLite's LIKE doesn't fold
+    // accents, so a SQL-level filter would miss "creme" against "crème". Custom foods
+    // are scoped per user, so the full list stays small enough to filter in memory.
+    const allCustomFoods = await prisma.customFood.findMany({
+      where: { userId: req.userId },
       orderBy: { createdAt: 'desc' },
     });
+    const customFoods = allCustomFoods.filter((food) => matchesSearch(food.foodName, query)).slice(0, 10);
 
     let offResults = [];
     try {

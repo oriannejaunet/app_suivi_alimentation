@@ -29,6 +29,10 @@ export function createApp() {
   app.use('/api/stats', statsRoutes);
   app.use('/api/weight', weightRoutes);
 
+  app.use('/api', (req, res) => {
+    res.status(404).json({ error: 'Endpoint inconnu' });
+  });
+
   if (env.nodeEnv === 'production') {
     const frontendDist = path.join(__dirname, '../../frontend/dist');
     app.use(express.static(frontendDist));

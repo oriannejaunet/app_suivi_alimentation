@@ -4,11 +4,11 @@ export default function CalorieSummaryCard({ summary }) {
   const progress = Math.min(100, Math.round((caloriesConsumed / targetCalories) * 100));
 
   return (
-    <div className="rounded-2xl bg-white p-6 shadow-sm">
+    <div className="rounded-3xl bg-white p-6 shadow-soft ring-1 ring-brand-100">
       <div className="mb-4 flex items-baseline justify-between">
         <div>
           <p className="text-sm text-gray-500">Consommées</p>
-          <p className="text-3xl font-bold text-gray-900">{Math.round(caloriesConsumed)}</p>
+          <p className="font-display text-3xl font-bold text-brand-700">{Math.round(caloriesConsumed)}</p>
         </div>
         <div className="text-right">
           <p className="text-sm text-gray-500">Objectif</p>
@@ -16,7 +16,7 @@ export default function CalorieSummaryCard({ summary }) {
         </div>
       </div>
 
-      <div className="mb-3 h-3 w-full overflow-hidden rounded-full bg-gray-100">
+      <div className="mb-3 h-3 w-full overflow-hidden rounded-full bg-pink-50">
         <div
           className={`h-full rounded-full transition-all ${isOver ? 'bg-red-500' : 'bg-brand-500'}`}
           style={{ width: `${progress}%` }}

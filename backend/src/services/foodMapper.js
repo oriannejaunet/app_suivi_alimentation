@@ -1,5 +1,19 @@
 const KJ_TO_KCAL = 4.184;
 
+// SQLite's LIKE (Prisma `contains`) is only case-insensitive for ASCII and doesn't
+// fold accents, so "creme" wouldn't match "crème". Normalizing both sides here lets
+// callers filter in JS regardless of case or diacritics.
+export function normalizeForSearch(str) {
+  return str
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase();
+}
+
+export function matchesSearch(foodName, query) {
+  return normalizeForSearch(foodName).includes(normalizeForSearch(query));
+}
+
 export function mapOffProductToFoodDto(product) {
   const nutriments = product.nutriments || {};
 

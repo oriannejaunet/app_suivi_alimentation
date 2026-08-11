@@ -3,7 +3,8 @@ import { useMemo, useState } from 'react';
 const WIDTH = 600;
 const HEIGHT = 200;
 const PAD = { top: 16, right: 12, bottom: 24, left: 40 };
-const LINE_COLOR = '#2a78d6';
+// Rose de la marque (identité de série, cohérent avec la ligne "perte de poids" de CaloriesChart).
+const LINE_COLOR = '#db2777';
 
 function formatShortDate(iso) {
   return new Date(`${iso}T00:00:00`).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });

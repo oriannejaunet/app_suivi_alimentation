@@ -1,6 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { api } from '../../api/client.js';
 import CustomFoodForm from './CustomFoodForm.jsx';
+
+const MIN_QUERY_LENGTH = 2;
+const DEBOUNCE_MS = 300;
 
 export default function FoodSearch({ onSelect }) {
   const [query, setQuery] = useState('');
@@ -10,21 +14,41 @@ export default function FoodSearch({ onSelect }) {
   const [error, setError] = useState('');
   const [showCustomForm, setShowCustomForm] = useState(false);
 
-  async function handleSearch(e) {
-    e.preventDefault();
-    if (!query.trim()) return;
+  useEffect(() => {
+    const trimmed = query.trim();
+    if (trimmed.length < MIN_QUERY_LENGTH) {
+      setResults([]);
+      setSearched(false);
+      setError('');
+      setSearching(false);
+      return undefined;
+    }
+
+    const controller = new AbortController();
     setSearching(true);
     setError('');
-    try {
-      const { data } = await api.get('/food/search', { params: { q: query } });
-      setResults(data);
-      setSearched(true);
-    } catch {
-      setError('La recherche a échoué. Réessayez.');
-    } finally {
-      setSearching(false);
-    }
-  }
+
+    const timer = setTimeout(async () => {
+      try {
+        const { data } = await api.get('/food/search', {
+          params: { q: trimmed },
+          signal: controller.signal,
+        });
+        setResults(data);
+        setSearched(true);
+        setSearching(false);
+      } catch (err) {
+        if (axios.isCancel(err)) return;
+        setError('La recherche a échoué. Réessayez.');
+        setSearching(false);
+      }
+    }, DEBOUNCE_MS);
+
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
+  }, [query]);
 
   function handleCustomCreated(food) {
     setShowCustomForm(false);
@@ -32,32 +56,31 @@ export default function FoodSearch({ onSelect }) {
   }
 
   return (
-    <div className="rounded-2xl bg-white p-4 shadow-sm">
-      <form onSubmit={handleSearch} className="flex gap-2">
+    <div className="rounded-2xl bg-white p-4 shadow-soft">
+      <div className="relative">
         <input
           type="text"
+          autoFocus
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Rechercher un aliment : pomme, poulet grillé…"
-          className="flex-1 rounded-lg border border-gray-300 px-3 py-2 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+          className="w-full rounded-2xl border border-pink-100 bg-white px-3 py-2 pr-9 focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200"
         />
-        <button
-          type="submit"
-          disabled={searching}
-          className="rounded-lg bg-brand-600 px-4 py-2 font-medium text-white hover:bg-brand-700 disabled:opacity-50"
-        >
-          {searching ? '…' : 'Chercher'}
-        </button>
-      </form>
+        {searching && (
+          <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-brand-400">
+            …
+          </span>
+        )}
+      </div>
 
       {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
 
       {searched && !searching && results.length === 0 && !error && (
-        <p className="mt-3 text-sm text-gray-500">Aucun résultat pour « {query} ».</p>
+        <p className="mt-3 text-sm text-gray-500">Aucun résultat pour « {query.trim()} ».</p>
       )}
 
       {results.length > 0 && (
-        <ul className="mt-3 divide-y divide-gray-100">
+        <ul className="mt-3 divide-y divide-pink-100">
           {results.map((r) => (
             <li key={r.id || r.barcode}>
               <button

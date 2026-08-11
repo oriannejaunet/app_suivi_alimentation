@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { calculateBMR, calculateTDEE, calculateTargetCalories, calculateMacroTargets } from '../src/services/calorie.service.js';
+import { calculateBMR, calculateTDEE, calculateTargetCalories, calculateMacroTargets, scaleNutrition } from '../src/services/calorie.service.js';
 
 describe('calculateBMR', () => {
   it('calcule le BMR pour un homme (Mifflin-St Jeor)', () => {
@@ -66,5 +66,31 @@ describe('calculateMacroTargets', () => {
     const known = calculateMacroTargets({ weightKg: 70, goal: 'maintain', targetCalories: 2000 });
     const unknown = calculateMacroTargets({ weightKg: 70, goal: undefined, targetCalories: 2000 });
     expect(unknown).toEqual(known);
+  });
+});
+
+describe('scaleNutrition', () => {
+  it('met à l\'échelle calories et macros pour une quantité en grammes', () => {
+    // 150g d'un aliment à 200 kcal / 20g protéines / 30g glucides / 10g lipides pour 100g
+    const result = scaleNutrition(
+      { caloriesPer100g: 200, proteinPer100g: 20, carbsPer100g: 30, fatPer100g: 10 },
+      150,
+    );
+    expect(result).toEqual({ calories: 300, proteinG: 30, carbsG: 45, fatG: 15 });
+  });
+
+  it('renvoie null pour les macros absentes sans toucher aux calories', () => {
+    const result = scaleNutrition({ caloriesPer100g: 100 }, 250);
+    expect(result).toEqual({ calories: 250, proteinG: null, carbsG: null, fatG: null });
+  });
+
+  it('distingue une macro à 0 (conservée) d\'une macro absente (null)', () => {
+    const result = scaleNutrition(
+      { caloriesPer100g: 100, proteinPer100g: 0, carbsPer100g: null, fatPer100g: undefined },
+      100,
+    );
+    expect(result.proteinG).toBe(0);
+    expect(result.carbsG).toBeNull();
+    expect(result.fatG).toBeNull();
   });
 });

@@ -1,3 +1,17 @@
+export function todayLogDate() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+export function scaleNutrition({ caloriesPer100g, proteinPer100g, carbsPer100g, fatPer100g }, quantityG) {
+  const factor = quantityG / 100;
+  return {
+    calories: caloriesPer100g * factor,
+    proteinG: proteinPer100g != null ? proteinPer100g * factor : null,
+    carbsG: carbsPer100g != null ? carbsPer100g * factor : null,
+    fatG: fatPer100g != null ? fatPer100g * factor : null,
+  };
+}
+
 export const ACTIVITY_MULTIPLIERS = {
   sedentary: 1.2,
   light: 1.375,
@@ -22,6 +36,14 @@ export function calculateTDEE(bmr, activityLevel) {
 export function calculateTargetCalories(tdee, goalRateKcal) {
   return tdee + goalRateKcal;
 }
+
+// Ajustements caloriques quotidiens par objectif, dupliqués avec le frontend
+// (frontend/src/constants/goals.js) faute de code partagé entre les deux apps.
+export const GOAL_RATE_KCAL = {
+  lose: -500,
+  maintain: 0,
+  gain: 300,
+};
 
 // Protéines en g/kg de poids corporel : plus élevé en déficit pour préserver la masse
 // musculaire (référentiels usuels en nutrition sportive : ~1.6-2.2 g/kg).

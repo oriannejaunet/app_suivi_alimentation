@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import { getByBarcode, search, createCustom } from '../controllers/food.controller.js';
-import { validateBody } from '../middleware/validate.js';
+import { validateBody, validateQuery } from '../middleware/validate.js';
 import { requireAuth } from '../middleware/auth.middleware.js';
 
 const router = Router();
@@ -15,8 +15,12 @@ const customFoodSchema = z.object({
   fatPer100g: z.number().nonnegative().optional(),
 });
 
+const searchQuerySchema = z.object({
+  q: z.string().optional(),
+});
+
 router.get('/barcode/:barcode', getByBarcode);
-router.get('/search', search);
+router.get('/search', validateQuery(searchQuerySchema), search);
 router.post('/custom', validateBody(customFoodSchema), createCustom);
 
 export default router;

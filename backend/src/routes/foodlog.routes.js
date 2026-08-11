@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import { createLog, listLogs, deleteLog } from '../controllers/foodlog.controller.js';
-import { validateBody } from '../middleware/validate.js';
+import { validateBody, validateQuery } from '../middleware/validate.js';
 import { requireAuth } from '../middleware/auth.middleware.js';
 
 const router = Router();
@@ -18,8 +18,12 @@ const createLogSchema = z.object({
   logDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
 });
 
+const listQuerySchema = z.object({
+  logDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+});
+
 router.post('/', validateBody(createLogSchema), createLog);
-router.get('/', listLogs);
+router.get('/', validateQuery(listQuerySchema), listLogs);
 router.delete('/:id', deleteLog);
 
 export default router;

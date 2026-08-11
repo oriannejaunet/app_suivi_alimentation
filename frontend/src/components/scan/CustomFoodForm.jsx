@@ -37,7 +37,7 @@ export default function CustomFoodForm({ initialName = '', onCreated, onCancel }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mt-4 space-y-3 rounded-2xl border border-gray-100 bg-gray-50 p-4">
+    <form onSubmit={handleSubmit} className="mt-4 space-y-3 rounded-2xl border border-pink-100 bg-pink-50/50 p-4">
       <h3 className="font-semibold text-gray-900">Créer un aliment</h3>
 
       <div>
@@ -47,7 +47,7 @@ export default function CustomFoodForm({ initialName = '', onCreated, onCancel }
           required
           value={form.foodName}
           onChange={(e) => update('foodName', e.target.value)}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+          className="w-full rounded-2xl border border-pink-100 bg-white px-3 py-2 focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200"
         />
       </div>
 
@@ -59,7 +59,7 @@ export default function CustomFoodForm({ initialName = '', onCreated, onCancel }
           min="0"
           value={form.caloriesPer100g}
           onChange={(e) => update('caloriesPer100g', e.target.value)}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+          className="w-full rounded-2xl border border-pink-100 bg-white px-3 py-2 focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200"
         />
       </div>
 
@@ -71,7 +71,7 @@ export default function CustomFoodForm({ initialName = '', onCreated, onCancel }
             min="0"
             value={form.proteinPer100g}
             onChange={(e) => update('proteinPer100g', e.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-2 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            className="w-full rounded-xl border border-pink-100 bg-white px-2 py-2 text-sm focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200"
           />
         </div>
         <div>
@@ -81,7 +81,7 @@ export default function CustomFoodForm({ initialName = '', onCreated, onCancel }
             min="0"
             value={form.carbsPer100g}
             onChange={(e) => update('carbsPer100g', e.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-2 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            className="w-full rounded-xl border border-pink-100 bg-white px-2 py-2 text-sm focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200"
           />
         </div>
         <div>
@@ -91,7 +91,7 @@ export default function CustomFoodForm({ initialName = '', onCreated, onCancel }
             min="0"
             value={form.fatPer100g}
             onChange={(e) => update('fatPer100g', e.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-2 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            className="w-full rounded-xl border border-pink-100 bg-white px-2 py-2 text-sm focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200"
           />
         </div>
       </div>
@@ -102,14 +102,14 @@ export default function CustomFoodForm({ initialName = '', onCreated, onCancel }
         <button
           type="button"
           onClick={onCancel}
-          className="flex-1 rounded-lg border border-gray-300 bg-white py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+          className="flex-1 rounded-full border border-pink-200 bg-white py-2 text-sm font-medium text-gray-700 hover:bg-pink-50"
         >
           Annuler
         </button>
         <button
           type="submit"
           disabled={submitting}
-          className="flex-1 rounded-lg bg-brand-600 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
+          className="flex-1 rounded-full bg-gradient-to-r from-brand-500 to-brand-600 py-2 text-sm font-semibold text-white shadow-soft transition hover:from-brand-600 hover:to-brand-700 disabled:opacity-50"
         >
           {submitting ? 'Création…' : 'Créer et ajouter'}
         </button>

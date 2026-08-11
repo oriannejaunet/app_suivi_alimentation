@@ -1,7 +1,7 @@
 export default function FoodLogList({ logs, onDelete }) {
   if (logs.length === 0) {
     return (
-      <div className="mt-6 rounded-2xl bg-white p-6 text-center text-sm text-gray-500 shadow-sm">
+      <div className="mt-6 rounded-2xl bg-white p-6 text-center text-sm text-gray-500 shadow-soft">
         Aucun aliment enregistré aujourd'hui. Utilisez l'onglet Scanner pour en ajouter un.
       </div>
     );
@@ -11,7 +11,7 @@ export default function FoodLogList({ logs, onDelete }) {
     <div className="mt-6 space-y-2">
       <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-500">Journal du jour</h2>
       {logs.map((log) => (
-        <div key={log.id} className="flex items-center justify-between rounded-xl bg-white p-4 shadow-sm">
+        <div key={log.id} className="flex items-center justify-between rounded-xl bg-white p-4 shadow-soft">
           <div className="min-w-0 flex-1">
             <p className="truncate font-medium text-gray-900">{log.foodName}</p>
             <p className="text-xs text-gray-500">{log.quantityG} g · {Math.round(log.calories)} kcal</p>

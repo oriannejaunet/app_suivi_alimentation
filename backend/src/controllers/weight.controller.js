@@ -1,8 +1,5 @@
 import { prisma } from '../lib/prisma.js';
-
-function todayLogDate() {
-  return new Date().toISOString().slice(0, 10);
-}
+import { todayLogDate } from '../services/calorie.service.js';
 
 export async function logWeight(req, res, next) {
   try {
@@ -34,7 +31,7 @@ export async function logWeight(req, res, next) {
 
 export async function listWeights(req, res, next) {
   try {
-    const days = Math.min(Number(req.query.days) || 90, 365);
+    const days = req.validatedQuery.days ?? 90;
     const since = new Date();
     since.setDate(since.getDate() - days);
     const sinceDate = since.toISOString().slice(0, 10);

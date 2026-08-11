@@ -21,7 +21,7 @@ const credentialsSchema = z.object({
 
 router.post('/register', authLimiter, validateBody(credentialsSchema), register);
 router.post('/login', authLimiter, validateBody(credentialsSchema), login);
-router.post('/logout', requireAuth, logout);
+router.post('/logout', logout);
 router.get('/me', me);
 
 export default router;

@@ -18,14 +18,20 @@ function isFresh(cacheEntry) {
 
 // Open Food Facts renvoie de temps en temps une erreur transitoire (limitation de débit,
 // coupure réseau via le proxy...). Un seul réessai suffit à absorber la plupart des cas
-// sans faire attendre l'utilisateur trop longtemps.
+// sans faire attendre l'utilisateur trop longtemps. Un 404 n'est pas une panne : c'est un
+// produit inconnu, il ne faut ni le réessayer ni le transformer en 503.
 async function fetchOffJson(url) {
   let lastError;
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
       const response = await fetch(url, { headers: { 'User-Agent': USER_AGENT }, dispatcher });
       if (!response.ok) {
+        await response.body?.cancel();
+        if (response.status === 404) return null;
         lastError = new Error(`Open Food Facts a répondu ${response.status} pour ${url}`);
+        const retryable = response.status >= 500 || response.status === 429;
+        if (!retryable) break;
+        await new Promise((resolve) => setTimeout(resolve, 300));
         continue;
       }
       return await response.json();
@@ -51,7 +57,7 @@ export async function lookupBarcode(barcode) {
     throw new HttpError(503, 'Impossible de contacter Open Food Facts, réessayez.');
   }
 
-  if (data.status !== 1 || !data.product) {
+  if (!data || data.status !== 1 || !data.product) {
     if (cached) return cached;
     return null;
   }
@@ -77,7 +83,7 @@ export async function searchByName(query) {
   url.searchParams.set('fields', 'code,product_name,product_name_fr,brands,nutriments,image_front_url');
 
   const data = await fetchOffJson(url);
-  const products = data.products || [];
+  const products = data?.products || [];
   return products
     .map((product) => ({ barcode: product.code, ...mapOffProductToFoodDto(product) }))
     .filter((p) => p.caloriesPer100g != null);

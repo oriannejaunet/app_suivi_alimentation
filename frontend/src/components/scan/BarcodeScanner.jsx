@@ -13,10 +13,15 @@ export default function BarcodeScanner({ onDetected, active }) {
     let cancelled = false;
 
     reader
-      .decodeFromVideoDevice(undefined, videoRef.current, (result, err, controls) => {
-        controlsRef.current = controls;
+      .decodeFromVideoDevice(undefined, videoRef.current, (result) => {
         if (result && !cancelled) {
           onDetected(result.getText());
+        }
+      })
+      .then((controls) => {
+        controlsRef.current = controls;
+        if (cancelled) {
+          controls.stop();
         }
       })
       .catch((err) => {
@@ -30,12 +35,13 @@ export default function BarcodeScanner({ onDetected, active }) {
     return () => {
       cancelled = true;
       controlsRef.current?.stop();
+      videoRef.current?.srcObject?.getTracks().forEach((track) => track.stop());
     };
   }, [active, onDetected]);
 
   if (permissionError) {
     return (
-      <div className="flex aspect-square w-full items-center justify-center rounded-2xl bg-gray-100 p-6 text-center text-sm text-gray-600">
+      <div className="flex aspect-square w-full items-center justify-center rounded-2xl bg-pink-50 p-6 text-center text-sm text-gray-600">
         {permissionError}
       </div>
     );

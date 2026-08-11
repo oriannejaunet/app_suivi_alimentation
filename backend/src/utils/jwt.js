@@ -13,17 +13,18 @@ export function verifyToken(token) {
   return payload.sub;
 }
 
+const COOKIE_OPTIONS = {
+  httpOnly: true,
+  sameSite: 'lax',
+  secure: env.nodeEnv === 'production',
+};
+
 export function setAuthCookie(res, token) {
-  res.cookie(COOKIE_NAME, token, {
-    httpOnly: true,
-    sameSite: 'lax',
-    secure: env.nodeEnv === 'production',
-    maxAge: MAX_AGE_MS,
-  });
+  res.cookie(COOKIE_NAME, token, { ...COOKIE_OPTIONS, maxAge: MAX_AGE_MS });
 }
 
 export function clearAuthCookie(res) {
-  res.clearCookie(COOKIE_NAME);
+  res.clearCookie(COOKIE_NAME, COOKIE_OPTIONS);
 }
 
 export function getTokenFromRequest(req) {
