@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "fingerprint": {
+    "configHash": "ac01aaa9b512745d",
+    "gitHead": "ab95bc9e3220719f9ef385f8f1dd34c1d68663b0"
+  },
+  "generatedAt": "2026-08-10T09:30:54.601Z",
+  "patterns": {
+    "naming": {
+      "fileNaming": {
+        "style": "camelCase",
+        "confidence": "low",
+        "sampleSize": 52
+      },
+      "functionNaming": {
+        "style": "camelCase",
+        "confidence": "high",
+        "sampleSize": 200
+      },
+      "testPattern": ".test.js",
+      "componentExtensions": []
+    },
+    "imports": {
+      "namedImportRatio": 0.71,
+      "pathAliases": [],
+      "barrelFileCount": 0,
+      "layerWarnings": []
+    },
+    "architecture": {
+      "layers": [
+        {
+          "name": "backend",
+          "path": "backend",
+          "fileCount": 25
+        },
+        {
+          "name": "frontend",
+          "path": "frontend",
+          "fileCount": 27
+        }
+      ],
+      "frameworkMarkers": [
+        "React"
+      ],
+      "statePatterns": [
+        "React hooks (useState/useReducer)",
+        "React Context API"
+      ],
+      "errorPatterns": [
+        "try/catch",
+        "Promise .catch()"
+      ],
+      "testFramework": "Vitest"
+    },
+    "style": {
+      "indentation": "4 spaces",
+      "quoteStyle": "single",
+      "semicolons": "present",
+      "arrowFunctionRatio": 0.43,
+      "asyncAwaitRatio": 1
+    },
+    "api": {
+      "apiStyles": [
+        "REST (Express-style routing)"
+      ],
+      "authPatterns": [
+        "JWT"
+      ],
+      "eventPatterns": [],
+      "dataFetchers": [
+        "fetch API"
+      ]
+    }
+  }
+}
