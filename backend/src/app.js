@@ -36,7 +36,9 @@ export function createApp() {
   if (env.nodeEnv === 'production') {
     const frontendDist = path.join(__dirname, '../../frontend/dist');
     app.use(express.static(frontendDist));
-    app.get('*', (req, res) => res.sendFile(path.join(frontendDist, 'index.html')));
+    // Une vraie RegExp plutôt que `'*'` : Express 5 refuse le joker nu, et une RegExp
+    // contourne path-to-regexp au lieu d'en dépendre. Reste sur GET, comme avant.
+    app.get(/.*/, (req, res) => res.sendFile(path.join(frontendDist, 'index.html')));
   }
 
   app.use(errorHandler);

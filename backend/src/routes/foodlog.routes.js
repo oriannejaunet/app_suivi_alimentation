@@ -20,7 +20,7 @@ const createLogSchema = z.object({
 
 const listQuerySchema = z.object({
   logDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
-});
+}).strict();
 
 router.post('/', validateBody(createLogSchema), createLog);
 router.get('/', validateQuery(listQuerySchema), listLogs);

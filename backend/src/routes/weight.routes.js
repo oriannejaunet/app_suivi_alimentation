@@ -15,7 +15,7 @@ const logWeightSchema = z.object({
 const listQuerySchema = z.object({
   days: z.coerce.number().int().min(1).max(365).optional(),
   endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
-});
+}).strict();
 
 router.post('/', validateBody(logWeightSchema), logWeight);
 router.get('/', validateQuery(listQuerySchema), listWeights);

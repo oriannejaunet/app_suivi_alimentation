@@ -17,7 +17,7 @@ const customFoodSchema = z.object({
 
 const searchQuerySchema = z.object({
   q: z.string().optional(),
-});
+}).strict();
 
 router.get('/barcode/:barcode', getByBarcode);
 router.get('/search', validateQuery(searchQuerySchema), search);

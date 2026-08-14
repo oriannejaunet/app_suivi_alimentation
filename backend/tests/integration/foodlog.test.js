@@ -83,8 +83,10 @@ describe('GET /api/foodlog', () => {
   });
 
   // Régression : `?logDate[not]=x` arrivait dans Prisma comme un opérateur de filtre et
-  // renvoyait tout l'historique au lieu d'une seule journée (audit, point 6).
-  it('rejette un paramètre de requête transformé en objet', async () => {
+  // renvoyait tout l'historique au lieu d'une seule journée (audit, point 6). Le rejet vient
+  // désormais du `.strict()` du schéma : Express 5 parse cette clé littéralement au lieu
+  // d'en faire un objet, donc sans `.strict()` elle serait silencieusement ignorée.
+  it('rejette un paramètre de requête inconnu ou transformé en objet', async () => {
     const { agent } = await onboardedAgent();
     await agent.post('/api/foodlog').send({ ...POMME, logDate: '2026-08-14' });
     await agent.post('/api/foodlog').send({ ...POMME, logDate: '2026-08-13' });
