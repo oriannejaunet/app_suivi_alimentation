@@ -10,6 +10,6 @@
     "test": "npm run test -w backend"
   },
   "devDependencies": {
-    "concurrently": "^9.1.0"
+    "concurrently": "^10.0.4"
   }
 }
