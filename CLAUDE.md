@@ -80,7 +80,7 @@ Two independent apps in one npm-workspaces repo, no shared code between them.
 
 The explicit `prisma generate` step is not redundant: the tests' `globalSetup` only runs `migrate deploy`, which does not generate the client, so a clean checkout fails without it.
 
-`.github/dependabot.yml` covers npm (root plus both workspaces — a single root entry would miss them), GitHub Actions and Docker, monthly. Minor and patch bumps are grouped into one PR; majors stay individual since each needs a decision.
+`.github/dependabot.yml` covers npm, GitHub Actions and Docker, monthly. The npm entry points at `/` **only**: Dependabot reaches the workspace manifests through the root `package-lock.json`, so adding `/backend` and `/frontend` as extra directories opens every update twice — and the workspace-scoped copy edits `backend/package.json` without touching the lockfile, which breaks `npm ci`. (This is the opposite of `ncu`, which does need to be pointed at each workspace.) Minor and patch bumps are grouped into one PR; majors stay individual since each needs a decision.
 
 ## Known gaps worth knowing before touching related code
 
