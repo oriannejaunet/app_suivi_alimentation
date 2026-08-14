@@ -20,8 +20,8 @@ export default function QuantityEntryModal({ food, onConfirm, onCancel, submitti
           </div>
         </div>
 
-        <label className="mb-1 block text-sm font-medium text-gray-700">Quantité (g)</label>
-        <input
+        <label htmlFor="quantite-g" className="mb-1 block text-sm font-medium text-gray-700">Quantité (g)</label>
+        <input id="quantite-g"
           type="number"
           autoFocus
           min="1"

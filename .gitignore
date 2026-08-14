@@ -7,3 +7,6 @@ dist/
 .claude/
 .swiftask/
 .tmp/
+test-results/
+playwright-report/
+.playwright-mcp/

@@ -34,8 +34,9 @@ export default function RegisterPage() {
           <h1 className="mb-6 text-center font-display text-2xl font-bold text-brand-700">Créer un compte</h1>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Email</label>
-              <input
+              <label htmlFor="email" className="mb-1 block text-sm font-medium text-gray-700">Email</label>
+              <input id="email"
+                autoComplete="email"
                 type="email"
                 required
                 value={email}
@@ -44,8 +45,9 @@ export default function RegisterPage() {
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Mot de passe</label>
-              <input
+              <label htmlFor="mot-de-passe" className="mb-1 block text-sm font-medium text-gray-700">Mot de passe</label>
+              <input id="mot-de-passe"
+                autoComplete="new-password"
                 type="password"
                 required
                 minLength={8}

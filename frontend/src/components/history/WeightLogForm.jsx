@@ -25,8 +25,8 @@ export default function WeightLogForm({ currentWeight, onLogged }) {
     <form onSubmit={handleSubmit}>
       <div className="flex items-end gap-2">
         <div className="flex-1">
-          <label className="mb-1 block text-sm font-medium text-gray-700">Poids du jour (kg)</label>
-          <input
+          <label htmlFor="poids-du-jour-kg" className="mb-1 block text-sm font-medium text-gray-700">Poids du jour (kg)</label>
+          <input id="poids-du-jour-kg"
             type="number"
             required
             min="1"
