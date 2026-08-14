@@ -64,7 +64,7 @@ export default function FoodSearch({ onSelect }) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Rechercher un aliment : pomme, poulet grillé…"
-          className="w-full rounded-2xl border border-pink-100 bg-white px-3 py-2 pr-9 focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200"
+          className="w-full rounded-2xl border border-pink-100 bg-white px-3 py-2 pr-9 focus:border-brand-400 focus:outline-hidden focus:ring-2 focus:ring-brand-200"
         />
         {searching && (
           <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-brand-400">
@@ -94,7 +94,7 @@ export default function FoodSearch({ onSelect }) {
                   <span className="block truncate text-sm font-medium">
                     {r.foodName}
                     {r.isCustom && (
-                      <span className="ml-2 rounded bg-brand-50 px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-brand-700">
+                      <span className="ml-2 rounded-sm bg-brand-50 px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-brand-700">
                         Personnalisé
                       </span>
                     )}

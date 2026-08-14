@@ -47,7 +47,7 @@ export default function CustomFoodForm({ initialName = '', onCreated, onCancel }
           required
           value={form.foodName}
           onChange={(e) => update('foodName', e.target.value)}
-          className="w-full rounded-2xl border border-pink-100 bg-white px-3 py-2 focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200"
+          className="w-full rounded-2xl border border-pink-100 bg-white px-3 py-2 focus:border-brand-400 focus:outline-hidden focus:ring-2 focus:ring-brand-200"
         />
       </div>
 
@@ -59,7 +59,7 @@ export default function CustomFoodForm({ initialName = '', onCreated, onCancel }
           min="0"
           value={form.caloriesPer100g}
           onChange={(e) => update('caloriesPer100g', e.target.value)}
-          className="w-full rounded-2xl border border-pink-100 bg-white px-3 py-2 focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200"
+          className="w-full rounded-2xl border border-pink-100 bg-white px-3 py-2 focus:border-brand-400 focus:outline-hidden focus:ring-2 focus:ring-brand-200"
         />
       </div>
 
@@ -71,7 +71,7 @@ export default function CustomFoodForm({ initialName = '', onCreated, onCancel }
             min="0"
             value={form.proteinPer100g}
             onChange={(e) => update('proteinPer100g', e.target.value)}
-            className="w-full rounded-xl border border-pink-100 bg-white px-2 py-2 text-sm focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200"
+            className="w-full rounded-xl border border-pink-100 bg-white px-2 py-2 text-sm focus:border-brand-400 focus:outline-hidden focus:ring-2 focus:ring-brand-200"
           />
         </div>
         <div>
@@ -81,7 +81,7 @@ export default function CustomFoodForm({ initialName = '', onCreated, onCancel }
             min="0"
             value={form.carbsPer100g}
             onChange={(e) => update('carbsPer100g', e.target.value)}
-            className="w-full rounded-xl border border-pink-100 bg-white px-2 py-2 text-sm focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200"
+            className="w-full rounded-xl border border-pink-100 bg-white px-2 py-2 text-sm focus:border-brand-400 focus:outline-hidden focus:ring-2 focus:ring-brand-200"
           />
         </div>
         <div>
@@ -91,7 +91,7 @@ export default function CustomFoodForm({ initialName = '', onCreated, onCancel }
             min="0"
             value={form.fatPer100g}
             onChange={(e) => update('fatPer100g', e.target.value)}
-            className="w-full rounded-xl border border-pink-100 bg-white px-2 py-2 text-sm focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200"
+            className="w-full rounded-xl border border-pink-100 bg-white px-2 py-2 text-sm focus:border-brand-400 focus:outline-hidden focus:ring-2 focus:ring-brand-200"
           />
         </div>
       </div>
@@ -109,7 +109,7 @@ export default function CustomFoodForm({ initialName = '', onCreated, onCancel }
         <button
           type="submit"
           disabled={submitting}
-          className="flex-1 rounded-full bg-gradient-to-r from-brand-500 to-brand-600 py-2 text-sm font-semibold text-white shadow-soft transition hover:from-brand-600 hover:to-brand-700 disabled:opacity-50"
+          className="flex-1 rounded-full bg-linear-to-r from-brand-500 to-brand-600 py-2 text-sm font-semibold text-white shadow-soft transition hover:from-brand-600 hover:to-brand-700 disabled:opacity-50"
         >
           {submitting ? 'Création…' : 'Créer et ajouter'}
         </button>
