@@ -10,6 +10,7 @@ function required(name) {
 
 export const env = {
   port: process.env.PORT || 3000,
+  databaseUrl: required('DATABASE_URL'),
   jwtSecret: required('JWT_SECRET'),
   frontendOrigin: process.env.FRONTEND_ORIGIN || 'http://localhost:5173',
   nodeEnv: process.env.NODE_ENV || 'development',
