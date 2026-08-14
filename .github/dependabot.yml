@@ -1,0 +1,28 @@
+version: 2
+updates:
+  # Un seul écosystème npm suffit : `directories` couvre la racine et les deux workspaces,
+  # que `ncu` lancé à la racine ne voyait pas.
+  - package-ecosystem: npm
+    directories:
+      - /
+      - /backend
+      - /frontend
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 5
+    groups:
+      # Les mises à jour non cassantes arrivent en une seule PR : la CI les valide
+      # ensemble et il n'y a rien à arbitrer.
+      non-major:
+        update-types: [minor, patch]
+    # Les majeures restent individuelles, chacune demandant une décision.
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: monthly

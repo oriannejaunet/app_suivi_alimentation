@@ -67,6 +67,14 @@ Two independent apps in one npm-workspaces repo, no shared code between them.
 - `constants/goals.js` is the single source of truth for the onboarding `goal` choices and their default `goalRateKcal`; both `OnboardingPage.jsx` and `ProfilePage.jsx` import it so picking a goal always pre-fills a consistent calorie adjustment (still manually overridable afterward in `ProfilePage`).
 - Charts in `components/history/` (`WeightChart.jsx`, `CaloriesChart.jsx`) are hand-rolled inline SVG, not a charting library — deliberate, to keep the bundle small for two simple visualizations. Colors are pulled from a validated dataviz palette (categorical blue for the single-series weight line; status green/amber/red for the calorie bars' distance to target, plus a neutral grey for days with no entry — an unlogged day must never render as a met goal), hardcoded as hex rather than Tailwind classes since SVG fill/stroke need literal values.
 
+## CI
+
+`.github/workflows/ci.yml` runs on every push to `main` and every pull request, in three parallel jobs: `backend` (Prisma generate + `npm run test -w backend`), `frontend` (`npm run build -w frontend`), and `docker`, which builds the image, starts it with `docker compose up --wait`, and curls the production paths — SPA served, JSON 404 on `/api`, register sets the session cookie, `/api/auth/me` restores it. That last job exists because those paths only run with `NODE_ENV=production` and are therefore invisible to both the unit and the integration suites.
+
+The explicit `prisma generate` step is not redundant: the tests' `globalSetup` only runs `migrate deploy`, which does not generate the client, so a clean checkout fails without it.
+
+`.github/dependabot.yml` covers npm (root plus both workspaces — a single root entry would miss them), GitHub Actions and Docker, monthly. Minor and patch bumps are grouped into one PR; majors stay individual since each needs a decision.
+
 ## Known gaps worth knowing before touching related code
 
 - No dark mode anywhere in the frontend (fixed light Tailwind classes throughout).
