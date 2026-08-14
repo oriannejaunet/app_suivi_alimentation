@@ -1,4 +1,7 @@
-FROM node:22-alpine AS build
+# Node 24 (Active LTS). Prisma 5.22 est antérieur à Node 24 et ne le liste pas dans sa
+# matrice de support : migrations et requêtes ont été vérifiées sur cette image avant
+# de figer la version.
+FROM node:24-alpine AS build
 
 WORKDIR /app
 
@@ -17,7 +20,7 @@ RUN npx prisma generate --schema backend/prisma/schema.prisma
 RUN npm run build -w frontend
 
 
-FROM node:22-alpine AS runtime
+FROM node:24-alpine AS runtime
 
 WORKDIR /app
 
