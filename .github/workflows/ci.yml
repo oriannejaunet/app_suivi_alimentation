@@ -1,0 +1,94 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Une nouvelle poussée sur une PR annule le run précédent, devenu inutile.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Aligné sur l'image Docker (Active LTS).
+  NODE_VERSION: '24'
+
+jobs:
+  backend:
+    name: Tests backend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - run: npm ci
+
+      # `migrate deploy` (lancé par le globalSetup des tests) ne génère pas le client :
+      # sans cette étape, les tests échouent sur "@prisma/client did not initialize yet".
+      - name: Générer le client Prisma
+        run: npx prisma generate --schema backend/prisma/schema.prisma
+
+      - run: npm run test -w backend
+
+  frontend:
+    name: Build frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build -w frontend
+
+  docker:
+    name: Image Docker et démarrage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Construire et démarrer la pile
+        run: |
+          echo "JWT_SECRET=$(openssl rand -base64 48 | tr -d '\n')" > .env
+          docker compose up -d --build --wait
+
+      # Vérifie ce que les tests d'intégration ne peuvent pas voir : les migrations
+      # appliquées sur un volume vierge, le frontend réellement servi par Express, et le
+      # cookie de session posé avec NODE_ENV=production.
+      - name: Vérifier les chemins de production
+        run: |
+          set -euo pipefail
+
+          status() { curl -s -o /dev/null -w '%{http_code}' "$@"; }
+          expect() {
+            if [ "$1" != "$2" ]; then
+              echo "attendu $2, obtenu $1 ($3)" >&2
+              exit 1
+            fi
+            echo "ok: $3 -> $1"
+          }
+
+          expect "$(status http://localhost:3000/)" 200 "SPA servie"
+          expect "$(status http://localhost:3000/api/nope)" 404 "404 JSON sur /api inconnu"
+
+          expect "$(status -c cookies.txt -X POST http://localhost:3000/api/auth/register \
+            -H 'Content-Type: application/json' \
+            -d '{"email":"ci@example.com","password":"motdepasse123"}')" 201 "inscription"
+
+          grep -q '\btoken\b' cookies.txt || { echo "cookie de session absent" >&2; exit 1; }
+          echo "ok: cookie de session posé"
+
+          expect "$(status -b cookies.txt http://localhost:3000/api/auth/me)" 200 "session restaurée"
+
+      - name: Logs en cas d'échec
+        if: failure()
+        run: docker compose logs
