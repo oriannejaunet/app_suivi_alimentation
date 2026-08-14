@@ -5,8 +5,10 @@ FROM node:24-alpine AS build
 
 WORKDIR /app
 
-# Prisma a besoin d'openssl pour ses moteurs, y compris à la génération du client.
-RUN apk add --no-cache openssl
+# openssl pour les moteurs Prisma ; python3/make/g++ pour compiler better-sqlite3, qui
+# ne publie pas de binaire musl. Ces outils restent dans l'étape de build : le runtime ne
+# récupère que le `.node` compilé, valide puisque même musl et même version de Node.
+RUN apk add --no-cache openssl python3 make g++
 
 COPY package.json package-lock.json ./
 COPY backend/package.json backend/
