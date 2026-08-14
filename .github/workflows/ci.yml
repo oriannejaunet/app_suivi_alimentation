@@ -78,6 +78,7 @@ jobs:
           }
 
           expect "$(status http://localhost:3000/)" 200 "SPA servie"
+          expect "$(status http://localhost:3000/history)" 200 "route SPA profonde (catch-all)"
           expect "$(status http://localhost:3000/api/nope)" 404 "404 JSON sur /api inconnu"
 
           expect "$(status -c cookies.txt -X POST http://localhost:3000/api/auth/register \

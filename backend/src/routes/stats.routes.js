@@ -9,12 +9,12 @@ router.use(requireAuth);
 
 const summaryQuerySchema = z.object({
   logDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
-});
+}).strict();
 
 const historyQuerySchema = z.object({
   days: z.coerce.number().int().min(1).max(90).optional(),
   endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
-});
+}).strict();
 
 router.get('/summary', validateQuery(summaryQuerySchema), getSummary);
 router.get('/history', validateQuery(historyQuerySchema), getHistory);
