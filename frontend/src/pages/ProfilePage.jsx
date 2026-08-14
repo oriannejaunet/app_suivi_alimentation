@@ -84,7 +84,7 @@ export default function ProfilePage() {
               type="number"
               value={form.heightCm}
               onChange={(e) => update('heightCm', e.target.value)}
-              className="w-full rounded-2xl border border-pink-100 bg-white px-3 py-2 focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200"
+              className="w-full rounded-2xl border border-pink-100 bg-white px-3 py-2 focus:border-brand-400 focus:outline-hidden focus:ring-2 focus:ring-brand-200"
             />
           </div>
           <div>
@@ -94,7 +94,7 @@ export default function ProfilePage() {
               step="0.1"
               value={form.weightKg}
               onChange={(e) => update('weightKg', e.target.value)}
-              className="w-full rounded-2xl border border-pink-100 bg-white px-3 py-2 focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200"
+              className="w-full rounded-2xl border border-pink-100 bg-white px-3 py-2 focus:border-brand-400 focus:outline-hidden focus:ring-2 focus:ring-brand-200"
             />
           </div>
         </div>
@@ -106,7 +106,7 @@ export default function ProfilePage() {
               type="number"
               value={form.age}
               onChange={(e) => update('age', e.target.value)}
-              className="w-full rounded-2xl border border-pink-100 bg-white px-3 py-2 focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200"
+              className="w-full rounded-2xl border border-pink-100 bg-white px-3 py-2 focus:border-brand-400 focus:outline-hidden focus:ring-2 focus:ring-brand-200"
             />
           </div>
           <div>
@@ -114,7 +114,7 @@ export default function ProfilePage() {
             <select id="sexe"
               value={form.gender}
               onChange={(e) => update('gender', e.target.value)}
-              className="w-full rounded-2xl border border-pink-100 bg-white px-3 py-2 focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200"
+              className="w-full rounded-2xl border border-pink-100 bg-white px-3 py-2 focus:border-brand-400 focus:outline-hidden focus:ring-2 focus:ring-brand-200"
             >
               <option value="female">Femme</option>
               <option value="male">Homme</option>
@@ -127,7 +127,7 @@ export default function ProfilePage() {
           <select id="niveau-d-activite"
             value={form.activityLevel}
             onChange={(e) => update('activityLevel', e.target.value)}
-            className="w-full rounded-2xl border border-pink-100 bg-white px-3 py-2 focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200"
+            className="w-full rounded-2xl border border-pink-100 bg-white px-3 py-2 focus:border-brand-400 focus:outline-hidden focus:ring-2 focus:ring-brand-200"
           >
             {ACTIVITY_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -140,7 +140,7 @@ export default function ProfilePage() {
           <select id="objectif"
             value={form.goal}
             onChange={(e) => updateGoal(e.target.value)}
-            className="w-full rounded-2xl border border-pink-100 bg-white px-3 py-2 focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200"
+            className="w-full rounded-2xl border border-pink-100 bg-white px-3 py-2 focus:border-brand-400 focus:outline-hidden focus:ring-2 focus:ring-brand-200"
           >
             {GOAL_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -157,7 +157,7 @@ export default function ProfilePage() {
             step="50"
             value={form.goalRateKcal}
             onChange={(e) => update('goalRateKcal', e.target.value)}
-            className="w-full rounded-2xl border border-pink-100 bg-white px-3 py-2 focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200"
+            className="w-full rounded-2xl border border-pink-100 bg-white px-3 py-2 focus:border-brand-400 focus:outline-hidden focus:ring-2 focus:ring-brand-200"
           />
           <p className="mt-1 text-xs text-gray-500">
             Négatif pour un déficit, positif pour un surplus. Pré-rempli à{' '}
@@ -171,7 +171,7 @@ export default function ProfilePage() {
         <button
           type="submit"
           disabled={submitting}
-          className="w-full rounded-full bg-gradient-to-r from-brand-500 to-brand-600 py-2.5 font-semibold text-white shadow-soft transition hover:from-brand-600 hover:to-brand-700 disabled:opacity-50"
+          className="w-full rounded-full bg-linear-to-r from-brand-500 to-brand-600 py-2.5 font-semibold text-white shadow-soft transition hover:from-brand-600 hover:to-brand-700 disabled:opacity-50"
         >
           {submitting ? 'Enregistrement…' : 'Enregistrer'}
         </button>

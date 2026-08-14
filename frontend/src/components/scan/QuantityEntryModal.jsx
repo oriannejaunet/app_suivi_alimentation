@@ -27,7 +27,7 @@ export default function QuantityEntryModal({ food, onConfirm, onCancel, submitti
           min="1"
           value={quantityG}
           onChange={(e) => setQuantityG(e.target.value)}
-          className="w-full rounded-2xl border border-pink-100 bg-white px-3 py-2 text-lg focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200"
+          className="w-full rounded-2xl border border-pink-100 bg-white px-3 py-2 text-lg focus:border-brand-400 focus:outline-hidden focus:ring-2 focus:ring-brand-200"
         />
 
         <p className="mt-3 text-center font-display text-2xl font-bold text-brand-700">{calories} kcal</p>
@@ -44,7 +44,7 @@ export default function QuantityEntryModal({ food, onConfirm, onCancel, submitti
           <button
             onClick={() => onConfirm(grams)}
             disabled={submitting || grams <= 0 || food.caloriesPer100g == null}
-            className="flex-1 rounded-full bg-gradient-to-r from-brand-500 to-brand-600 py-2.5 font-semibold text-white shadow-soft transition hover:from-brand-600 hover:to-brand-700 disabled:opacity-50"
+            className="flex-1 rounded-full bg-linear-to-r from-brand-500 to-brand-600 py-2.5 font-semibold text-white shadow-soft transition hover:from-brand-600 hover:to-brand-700 disabled:opacity-50"
           >
             {submitting ? 'Ajout…' : 'Ajouter'}
           </button>
