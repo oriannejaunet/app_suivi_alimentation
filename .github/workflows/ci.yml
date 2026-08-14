@@ -93,3 +93,42 @@ jobs:
       - name: Logs en cas d'échec
         if: failure()
         run: docker compose logs
+
+  e2e:
+    name: Parcours navigateur
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - run: npm ci
+
+      - name: Installer Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Démarrer la pile
+        run: |
+          echo "JWT_SECRET=$(openssl rand -base64 48 | tr -d '\n')" > .env
+          docker compose up -d --build --wait
+
+      # Les tests visent le conteneur, donc le bundle de production réellement livré,
+      # et non le serveur de développement qui se comporte différemment.
+      - run: npx playwright test
+        env:
+          E2E_RUN_ID: ${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: Rapport en cas d'échec
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+      - name: Logs du conteneur en cas d'échec
+        if: failure()
+        run: docker compose logs

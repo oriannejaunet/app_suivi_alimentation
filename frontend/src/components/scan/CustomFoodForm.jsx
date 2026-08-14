@@ -41,8 +41,8 @@ export default function CustomFoodForm({ initialName = '', onCreated, onCancel }
       <h3 className="font-semibold text-gray-900">Créer un aliment</h3>
 
       <div>
-        <label className="mb-1 block text-sm font-medium text-gray-700">Nom</label>
-        <input
+        <label htmlFor="nom" className="mb-1 block text-sm font-medium text-gray-700">Nom</label>
+        <input id="nom"
           type="text"
           required
           value={form.foodName}
@@ -52,8 +52,8 @@ export default function CustomFoodForm({ initialName = '', onCreated, onCancel }
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-medium text-gray-700">Calories pour 100 g</label>
-        <input
+        <label htmlFor="calories-pour-100-g" className="mb-1 block text-sm font-medium text-gray-700">Calories pour 100 g</label>
+        <input id="calories-pour-100-g"
           type="number"
           required
           min="0"
@@ -65,8 +65,8 @@ export default function CustomFoodForm({ initialName = '', onCreated, onCancel }
 
       <div className="grid grid-cols-3 gap-2">
         <div>
-          <label className="mb-1 block text-xs font-medium text-gray-700">Protéines (g)</label>
-          <input
+          <label htmlFor="proteines-g" className="mb-1 block text-xs font-medium text-gray-700">Protéines (g)</label>
+          <input id="proteines-g"
             type="number"
             min="0"
             value={form.proteinPer100g}
@@ -75,8 +75,8 @@ export default function CustomFoodForm({ initialName = '', onCreated, onCancel }
           />
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium text-gray-700">Glucides (g)</label>
-          <input
+          <label htmlFor="glucides-g" className="mb-1 block text-xs font-medium text-gray-700">Glucides (g)</label>
+          <input id="glucides-g"
             type="number"
             min="0"
             value={form.carbsPer100g}
@@ -85,8 +85,8 @@ export default function CustomFoodForm({ initialName = '', onCreated, onCancel }
           />
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium text-gray-700">Lipides (g)</label>
-          <input
+          <label htmlFor="lipides-g" className="mb-1 block text-xs font-medium text-gray-700">Lipides (g)</label>
+          <input id="lipides-g"
             type="number"
             min="0"
             value={form.fatPer100g}

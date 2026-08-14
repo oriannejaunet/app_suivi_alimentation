@@ -79,8 +79,8 @@ export default function ProfilePage() {
       <form onSubmit={handleSubmit} className="space-y-5 rounded-2xl bg-white p-6 shadow-soft">
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Taille (cm)</label>
-            <input
+            <label htmlFor="taille-cm" className="mb-1 block text-sm font-medium text-gray-700">Taille (cm)</label>
+            <input id="taille-cm"
               type="number"
               value={form.heightCm}
               onChange={(e) => update('heightCm', e.target.value)}
@@ -88,8 +88,8 @@ export default function ProfilePage() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Poids (kg)</label>
-            <input
+            <label htmlFor="poids-kg" className="mb-1 block text-sm font-medium text-gray-700">Poids (kg)</label>
+            <input id="poids-kg"
               type="number"
               step="0.1"
               value={form.weightKg}
@@ -101,8 +101,8 @@ export default function ProfilePage() {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Âge</label>
-            <input
+            <label htmlFor="age" className="mb-1 block text-sm font-medium text-gray-700">Âge</label>
+            <input id="age"
               type="number"
               value={form.age}
               onChange={(e) => update('age', e.target.value)}
@@ -110,8 +110,8 @@ export default function ProfilePage() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Sexe</label>
-            <select
+            <label htmlFor="sexe" className="mb-1 block text-sm font-medium text-gray-700">Sexe</label>
+            <select id="sexe"
               value={form.gender}
               onChange={(e) => update('gender', e.target.value)}
               className="w-full rounded-2xl border border-pink-100 bg-white px-3 py-2 focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200"
@@ -123,8 +123,8 @@ export default function ProfilePage() {
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">Niveau d'activité</label>
-          <select
+          <label htmlFor="niveau-d-activite" className="mb-1 block text-sm font-medium text-gray-700">Niveau d'activité</label>
+          <select id="niveau-d-activite"
             value={form.activityLevel}
             onChange={(e) => update('activityLevel', e.target.value)}
             className="w-full rounded-2xl border border-pink-100 bg-white px-3 py-2 focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200"
@@ -136,8 +136,8 @@ export default function ProfilePage() {
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">Objectif</label>
-          <select
+          <label htmlFor="objectif" className="mb-1 block text-sm font-medium text-gray-700">Objectif</label>
+          <select id="objectif"
             value={form.goal}
             onChange={(e) => updateGoal(e.target.value)}
             className="w-full rounded-2xl border border-pink-100 bg-white px-3 py-2 focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200"
@@ -149,10 +149,10 @@ export default function ProfilePage() {
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
+          <label htmlFor="ajustement-calorique-quotidien-kcal" className="mb-1 block text-sm font-medium text-gray-700">
             Ajustement calorique quotidien (kcal)
           </label>
-          <input
+          <input id="ajustement-calorique-quotidien-kcal"
             type="number"
             step="50"
             value={form.goalRateKcal}
