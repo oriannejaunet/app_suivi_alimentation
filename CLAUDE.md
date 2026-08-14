@@ -21,7 +21,14 @@ cd backend && npx prisma studio                             # inspect the SQLite
 # frontend only
 npm run dev -w frontend              # vite dev server
 npm run build -w frontend            # production build to frontend/dist
+
+# docker (single production-like container on :3000)
+cp .env.docker.example .env          # JWT_SECRET only; the rest is set in docker-compose.yml
+docker compose up -d --build
+docker compose down -v               # -v also drops the SQLite volume
 ```
+
+The Docker image is the production path, not a second architecture: it builds `frontend/dist` and runs the backend with `NODE_ENV=production` so Express serves it — same single-origin setup as a real deploy. The SQLite file lives on the named volume `db` at `/data/app.db`, so `docker-entrypoint.sh` runs `prisma migrate deploy` on every start rather than at build time. `node_modules` is copied wholesale from the build stage because the `prisma` CLI needed by that migration step is a devDependency and must stay version-locked to `@prisma/client`.
 
 `backend/.env` (gitignored, `.env.example` has the shape) needs `DATABASE_URL`, `JWT_SECRET`, `PORT`, `FRONTEND_ORIGIN`, `NODE_ENV`. `NODE_ENV` is not optional in practice even though `config/env.js` defaults it to `development`: it gates both serving `frontend/dist` in production (`app.js`) and the `secure` flag on the auth cookie (`utils/jwt.js`) — leaving it unset in a production deploy serves no frontend and ships the session cookie without `secure`.
 
