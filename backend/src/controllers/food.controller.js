@@ -29,7 +29,7 @@ export async function getByBarcode(req, res, next) {
 
 export async function search(req, res, next) {
   try {
-    const query = (req.validatedQuery.q || '').trim();
+    const query = (req.validatedQuery?.q || '').trim();
     if (!query) {
       return res.json([]);
     }

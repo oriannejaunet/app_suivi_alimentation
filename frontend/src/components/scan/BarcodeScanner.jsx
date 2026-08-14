@@ -10,10 +10,13 @@ export default function BarcodeScanner({ onDetected, active }) {
     if (!active) return undefined;
 
     const reader = new BrowserMultiFormatReader();
+    // React remet la ref à null avant d'exécuter le nettoyage des effets passifs :
+    // sans cette copie locale, le filet de sécurité ci-dessous serait inopérant au démontage.
+    const video = videoRef.current;
     let cancelled = false;
 
     reader
-      .decodeFromVideoDevice(undefined, videoRef.current, (result) => {
+      .decodeFromVideoDevice(undefined, video, (result) => {
         if (result && !cancelled) {
           onDetected(result.getText());
         }
@@ -35,7 +38,7 @@ export default function BarcodeScanner({ onDetected, active }) {
     return () => {
       cancelled = true;
       controlsRef.current?.stop();
-      videoRef.current?.srcObject?.getTracks().forEach((track) => track.stop());
+      video?.srcObject?.getTracks?.().forEach((track) => track.stop());
     };
   }, [active, onDetected]);
 

@@ -1,10 +1,6 @@
 import { prisma } from '../lib/prisma.js';
-import { calculateSummary, calculateBMR, calculateTDEE, calculateTargetCalories, todayLogDate, GOAL_RATE_KCAL } from '../services/calorie.service.js';
+import { calculateSummary, calculateBMR, calculateTDEE, calculateTargetCalories, todayLogDate, shiftLogDate, GOAL_RATE_KCAL } from '../services/calorie.service.js';
 import { HttpError } from '../middleware/errorHandler.js';
-
-function isoDate(date) {
-  return date.toISOString().slice(0, 10);
-}
 
 export async function getSummary(req, res, next) {
   try {
@@ -13,7 +9,7 @@ export async function getSummary(req, res, next) {
       throw new HttpError(400, 'Merci de compléter le questionnaire avant de consulter vos statistiques');
     }
 
-    const logDate = req.validatedQuery.logDate || todayLogDate();
+    const logDate = req.validatedQuery?.logDate || todayLogDate();
     const logs = await prisma.foodLog.findMany({ where: { userId: req.userId, logDate } });
 
     const caloriesConsumed = logs.reduce((sum, l) => sum + l.calories, 0);
@@ -50,12 +46,11 @@ export async function getHistory(req, res, next) {
       throw new HttpError(400, 'Merci de compléter le questionnaire avant de consulter vos statistiques');
     }
 
-    const days = req.validatedQuery.days ?? 14;
-    const dates = Array.from({ length: days }, (_, i) => {
-      const d = new Date();
-      d.setDate(d.getDate() - (days - 1 - i));
-      return isoDate(d);
-    });
+    const days = req.validatedQuery?.days ?? 14;
+    // La plage est ancrée sur la date locale envoyée par le client : les `logDate`
+    // stockés le sont aussi, une ancre UTC décalerait toute la fenêtre d'un jour.
+    const endDate = req.validatedQuery?.endDate ?? todayLogDate();
+    const dates = Array.from({ length: days }, (_, i) => shiftLogDate(endDate, -(days - 1 - i)));
 
     const logs = await prisma.foodLog.findMany({
       where: { userId: req.userId, logDate: { in: dates } },
@@ -77,13 +72,13 @@ export async function getHistory(req, res, next) {
     });
     const tdee = calculateTDEE(bmr, user.activityLevel);
     const maintenanceCalories = Math.round(calculateTargetCalories(tdee, GOAL_RATE_KCAL.maintain));
-    const loseCalories = Math.round(calculateTargetCalories(tdee, GOAL_RATE_KCAL.lose));
+    const targetCalories = Math.round(calculateTargetCalories(tdee, user.goalRateKcal));
 
     const history = dates.map((logDate) => ({
       logDate,
       caloriesConsumed: Math.round(caloriesByDate[logDate] || 0),
       maintenanceCalories,
-      loseCalories,
+      targetCalories,
     }));
 
     res.json(history);

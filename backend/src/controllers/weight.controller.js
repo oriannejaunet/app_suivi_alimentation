@@ -1,5 +1,5 @@
 import { prisma } from '../lib/prisma.js';
-import { todayLogDate } from '../services/calorie.service.js';
+import { todayLogDate, shiftLogDate } from '../services/calorie.service.js';
 
 export async function logWeight(req, res, next) {
   try {
@@ -31,10 +31,9 @@ export async function logWeight(req, res, next) {
 
 export async function listWeights(req, res, next) {
   try {
-    const days = req.validatedQuery.days ?? 90;
-    const since = new Date();
-    since.setDate(since.getDate() - days);
-    const sinceDate = since.toISOString().slice(0, 10);
+    const days = req.validatedQuery?.days ?? 90;
+    const endDate = req.validatedQuery?.endDate ?? todayLogDate();
+    const sinceDate = shiftLogDate(endDate, -(days - 1));
 
     const logs = await prisma.weightLog.findMany({
       where: { userId: req.userId, logDate: { gte: sinceDate } },

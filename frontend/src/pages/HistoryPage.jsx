@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { api } from '../api/client.js';
+import { localLogDate } from '../utils/date.js';
 import AppShell from '../components/layout/AppShell.jsx';
 import WeightChart from '../components/history/WeightChart.jsx';
 import WeightLogForm from '../components/history/WeightLogForm.jsx';
@@ -17,10 +18,12 @@ export default function HistoryPage() {
   const [error, setError] = useState('');
 
   const load = useCallback(async () => {
+    setError('');
     try {
+      const endDate = localLogDate();
       const [weightsRes, historyRes] = await Promise.all([
-        api.get('/weight', { params: { days: 90 } }),
-        api.get('/stats/history', { params: { days: 14 } }),
+        api.get('/weight', { params: { days: 90, endDate } }),
+        api.get('/stats/history', { params: { days: 14, endDate } }),
       ]);
       setWeights(weightsRes.data);
       setCalorieHistory(historyRes.data);
