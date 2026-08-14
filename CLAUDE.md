@@ -13,8 +13,9 @@ npm run test                         # backend tests (vitest)
 
 # backend only
 npm run dev -w backend               # nodemon src/index.js
-npm run test -w backend              # vitest run
+npm run test -w backend              # vitest run (unit + integration)
 npm run test -w backend -- tests/calorie.service.test.js   # single test file
+npm run test -w backend -- tests/integration               # integration tests only
 cd backend && npx prisma migrate dev --name <name>         # create + apply a migration after editing schema.prisma
 cd backend && npx prisma studio                             # inspect the SQLite db
 
@@ -59,6 +60,12 @@ Two independent apps in one npm-workspaces repo, no shared code between them.
 
 **Calorie/macro math** (`calorie.service.js`): Mifflin-St Jeor BMR → TDEE (activity multiplier) → target (`TDEE + goalRateKcal`, where `goalRateKcal` is a signed daily delta the frontend sets from the onboarding "goal" choice). Macro targets are derived from `weightKg` (g/kg protein, by goal) and a fat-percent-of-calories split, with carbs as the remainder — see `PROTEIN_G_PER_KG_BY_GOAL` / `FAT_PERCENT_BY_GOAL`. `stats.controller.js`'s `getHistory` returns both the user's own `targetCalories` (from their `goalRateKcal`) and a neutral `maintenanceCalories` reference, applying the **current** profile uniformly across the requested day range (no historized profile snapshots), which is a known simplification. `CaloriesChart` colours bars by signed distance to `targetCalories`, never against a hardcoded goal, so the chart stays correct for a gain goal or a manually overridden `goalRateKcal`.
 
+**Backend tests** (`backend/tests`) — two layers, one `npm run test -w backend`:
+- `calorie.service.test.js` / `foodMapper.test.js` are pure-function unit tests, no I/O.
+- `integration/*.test.js` drive the real Express app through supertest against a real SQLite database. `helpers/api.js` exposes `app` (from `createApp()`, never listening on a port), `resetDb()`, and `registerAgent()` / `onboardedAgent()` — the latter two return a `request.agent` that keeps the httpOnly cookie across calls, which is the only way to exercise protected routes end to end.
+- The test database is a throwaway file at `backend/.tmp/test.db`: `tests/setup/globalSetup.js` deletes it and runs `prisma migrate deploy` once per run, and `tests/setup/env.js` points `DATABASE_URL` at it *before* `lib/prisma.js` is imported (the Prisma client reads the URL at instantiation). Both read the path from `tests/setup/dbPath.js` rather than passing an env var between processes. `dotenv/config` never overrides an already-set variable, so a local `backend/.env` cannot hijack a test run. `fileParallelism: false` in `vitest.config.js` is required: every file shares that one database and truncates tables in `beforeEach`.
+- Tests that exist specifically to pin a past bug carry a `// Régression :` comment naming the audit point. Each of those was verified by re-introducing the bug and confirming the test fails — a regression test that still passes against the broken code is worse than no test.
+
 **Frontend** (`frontend/src`) — React Router (declarative mode) + Tailwind, mobile-first:
 - `context/AuthContext.jsx` calls `GET /api/auth/me` on mount; `components/common/ProtectedRoute.jsx` redirects to `/login` or `/onboarding` based on `user` / `user.onboarded`.
 - `api/client.js` is a single axios instance (`withCredentials: true`, `baseURL: /api`); `vite.config.js` proxies `/api` to `localhost:3000` in dev, so frontend and backend are effectively same-origin locally. In production `backend/src/app.js` serves `frontend/dist` statically for the same reason (avoids CORS/cross-site-cookie handling entirely).
@@ -70,5 +77,5 @@ Two independent apps in one npm-workspaces repo, no shared code between them.
 ## Known gaps worth knowing before touching related code
 
 - No dark mode anywhere in the frontend (fixed light Tailwind classes throughout).
-- `npm run test` only covers the backend's pure-logic services (`calorie.service`, `foodMapper`); there are no frontend tests and no integration/e2e tests.
+- There are still no frontend tests and no browser/e2e tests. The backend has unit tests for its pure services plus route-level integration tests (see the **Backend tests** section above), but nothing exercises React components, and the camera path in `BarcodeScanner.jsx` can only be checked by hand on a real device.
 - `frontend` build emits a single ~650-700KB JS chunk (Vite warns about this) — no code-splitting has been set up.
