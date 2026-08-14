@@ -93,6 +93,26 @@ En production, le backend Express sert le build du frontend en statique
 (voir `backend/src/app.js`), donc un seul serveur suffit à déployer
 l'ensemble.
 
+### Lancer avec Docker
+
+Un seul conteneur, qui reprend exactement ce fonctionnement : le frontend est
+compilé au build de l'image, puis servi par le backend.
+
+```bash
+cp .env.docker.example .env        # puis remplacez JWT_SECRET
+docker compose up -d --build       # http://localhost:3000
+```
+
+Les migrations Prisma sont appliquées à chaque démarrage par
+`docker-entrypoint.sh`, car la base SQLite vit sur le volume `db` et non dans
+l'image.
+
+```bash
+docker compose logs -f             # suivre les logs
+docker compose down                # arrêter, en conservant la base
+docker compose down -v             # arrêter et supprimer la base
+```
+
 ## Structure du projet
 
 ```

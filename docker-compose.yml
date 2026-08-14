@@ -1,0 +1,20 @@
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      # NODE_ENV=production conditionne DEUX choses : servir frontend/dist, et le
+      # drapeau `secure` du cookie de session. Les navigateurs acceptent un cookie
+      # Secure sur http://localhost, donc l'authentification fonctionne en local.
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: file:/data/app.db
+      FRONTEND_ORIGIN: http://localhost:3000
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET manquant - copiez .env.docker.example vers .env}
+    volumes:
+      - db:/data
+    restart: unless-stopped
+
+volumes:
+  db:
