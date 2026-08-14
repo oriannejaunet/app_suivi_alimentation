@@ -2,6 +2,15 @@ export function todayLogDate() {
   return new Date().toISOString().slice(0, 10);
 }
 
+// Décale une date "YYYY-MM-DD" d'un nombre de jours. L'ancre est interprétée en UTC
+// puis reformatée en UTC : le résultat ne dépend donc pas du fuseau du serveur, alors
+// que `new Date(); setDate(...)` décalerait la journée pour un serveur non-UTC.
+export function shiftLogDate(logDate, deltaDays) {
+  const d = new Date(`${logDate}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + deltaDays);
+  return d.toISOString().slice(0, 10);
+}
+
 export function scaleNutrition({ caloriesPer100g, proteinPer100g, carbsPer100g, fatPer100g }, quantityG) {
   const factor = quantityG / 100;
   return {

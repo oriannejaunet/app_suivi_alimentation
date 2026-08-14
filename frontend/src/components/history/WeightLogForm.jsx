@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { api } from '../../api/client.js';
+import { localLogDate } from '../../utils/date.js';
 
 export default function WeightLogForm({ currentWeight, onLogged }) {
   const [weightKg, setWeightKg] = useState(currentWeight ?? '');
@@ -11,7 +12,7 @@ export default function WeightLogForm({ currentWeight, onLogged }) {
     setError('');
     setSubmitting(true);
     try {
-      const { data } = await api.post('/weight', { weightKg: Number(weightKg) });
+      const { data } = await api.post('/weight', { weightKg: Number(weightKg), logDate: localLogDate() });
       onLogged(data);
     } catch (err) {
       setError(err.response?.data?.error || 'Une erreur est survenue');

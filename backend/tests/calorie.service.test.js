@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { calculateBMR, calculateTDEE, calculateTargetCalories, calculateMacroTargets, scaleNutrition } from '../src/services/calorie.service.js';
+import { calculateBMR, calculateTDEE, calculateTargetCalories, calculateMacroTargets, scaleNutrition, shiftLogDate } from '../src/services/calorie.service.js';
 
 describe('calculateBMR', () => {
   it('calcule le BMR pour un homme (Mifflin-St Jeor)', () => {
@@ -92,5 +92,26 @@ describe('scaleNutrition', () => {
     expect(result.proteinG).toBe(0);
     expect(result.carbsG).toBeNull();
     expect(result.fatG).toBeNull();
+  });
+});
+
+describe('shiftLogDate', () => {
+  it('recule d\'un nombre de jours donné', () => {
+    expect(shiftLogDate('2026-08-15', -1)).toBe('2026-08-14');
+    expect(shiftLogDate('2026-08-15', -13)).toBe('2026-08-02');
+  });
+
+  it('avance et gère le changement de mois', () => {
+    expect(shiftLogDate('2026-08-31', 1)).toBe('2026-09-01');
+    expect(shiftLogDate('2026-09-01', -1)).toBe('2026-08-31');
+  });
+
+  it('gère le changement d\'année et les années bissextiles', () => {
+    expect(shiftLogDate('2027-01-01', -1)).toBe('2026-12-31');
+    expect(shiftLogDate('2028-02-28', 1)).toBe('2028-02-29');
+  });
+
+  it('renvoie la date inchangée pour un décalage nul', () => {
+    expect(shiftLogDate('2026-08-15', 0)).toBe('2026-08-15');
   });
 });

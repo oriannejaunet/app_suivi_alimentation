@@ -24,7 +24,7 @@ export async function createLog(req, res, next) {
 
 export async function listLogs(req, res, next) {
   try {
-    const logDate = req.validatedQuery.logDate || todayLogDate();
+    const logDate = req.validatedQuery?.logDate || todayLogDate();
     const logs = await prisma.foodLog.findMany({
       where: { userId: req.userId, logDate },
       orderBy: { createdAt: 'desc' },
@@ -38,7 +38,9 @@ export async function listLogs(req, res, next) {
 export async function deleteLog(req, res, next) {
   try {
     const id = Number(req.params.id);
-    if (!Number.isInteger(id)) {
+    // Borné à l'`Int` 32 bits de Prisma : au-delà, le moteur rejette la requête
+    // avec une erreur de validation qui remonterait en 500 au lieu du 404 attendu.
+    if (!Number.isSafeInteger(id) || id <= 0 || id > 2147483647) {
       throw new HttpError(404, 'Entrée introuvable');
     }
 

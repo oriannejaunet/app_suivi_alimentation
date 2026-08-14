@@ -13,6 +13,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
+    setError('');
     try {
       const logDate = localLogDate();
       const [summaryRes, logsRes] = await Promise.all([
