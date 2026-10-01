@@ -10,7 +10,7 @@
     "test": "npm run test -w backend"
   },
   "devDependencies": {
-    "@playwright/test": "^1.62.1",
-    "concurrently": "^10.0.4"
+    "@playwright/test": "^1.63.0",
+    "concurrently": "^10.0.5"
   }
 }
